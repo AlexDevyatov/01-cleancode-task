@@ -2,50 +2,53 @@
 {
 	public class Chess
 	{
-		private readonly Board b;
+		private readonly Board _board;
 
 		public Chess(Board b)
 		{
-		this.b = b;
+		    this._board = b;
 		}
 
-		public string getWhiteStatus() {
-			bool bad=checkForWhite();
-			bool ok=  false;
-			foreach (Loc loc1 in b.Figures(Cell.White))
+		public string GetWhiteStatus() {
+
+			bool ok = false;
+			foreach (Loc location1 in _board.Figures(Cell.White))
 			{
-				foreach (Loc loc2 in b.Get(loc1).Figure.Moves(loc1, b)){
-				Cell old_dest = b.PerformMove(loc1, loc2);
-				if (!checkForWhite( ))
-					ok = true;
-				b.PerformUndoMove(loc1, loc2, old_dest);
-				}
-				
-				
-				
+			    foreach (Loc location2 in _board.Get(location1).Figure.Moves(location1, _board))
+			    {
+			        Cell oldDest = _board.PerformMove(location1, location2);
+			        if (!CheckForWhite())
+			            ok = true;
+			        _board.PerformUndoMove(location1, location2, oldDest);
+			    }
+
 			}
-			if (bad)
-				if (ok)
-					return "check";
-				else return "mate";
-				if (ok)	return "ok";
+		    if (CheckForWhite())
+		    {
+		        if (ok)
+		            return "check";
+		        return "mate";
+		    }
+		    if (ok)	
+                return "ok";
 			return "stalemate";
 		}
 
-		private bool checkForWhite()
+		private bool CheckForWhite()
 		{
-			bool bFlag = false;
-			foreach (Loc loc in b.Figures(Cell.Black))
+			bool isWhite = false;
+			foreach (Loc loc in _board.Figures(Cell.Black))
 			{
-				var cell = b.Get(loc);
-				var moves = cell.Figure.Moves(loc, b);
+				var cell = _board.Get(loc);
+				var moves = cell.Figure.Moves(loc, _board);
 				foreach (Loc to in moves)
 				{
-					if (b.Get(to).IsWhiteKing)
-						bFlag = true;
+					if (_board.Get(to).IsWhiteKing)
+						isWhite = true;
 				}
 			}
-			if (bFlag) return true;
+			if (isWhite)
+                return true;
 			return false;
 		}
 	}
